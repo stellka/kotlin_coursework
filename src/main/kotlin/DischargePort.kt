@@ -9,14 +9,6 @@ import kotlin.random.Random
 
 class DischargePort {
 
-    val result = when (Random.nextInt(1, 4)) {
-        1 -> SmallSizedTruck()
-        2 -> FoodTruck()
-        3 -> MediumTruck()
-        4 -> LargeSizedTruck()
-        else -> null
-    }
-
     fun getTruck() = runBlocking {
         repeat(3) {
             val result = when (Random.nextInt(1, 4)) {
@@ -40,6 +32,13 @@ class DischargePort {
 
     private fun CoroutineScope.produceTruck() = produce<Truck> {
         while (true) {
+            val result = when (Random.nextInt(1, 4)) {
+                1 -> SmallSizedTruck()
+                2 -> FoodTruck()
+                3 -> MediumTruck()
+                4 -> LargeSizedTruck()
+                else -> null
+            }
             result?.let { send(it) }
         }
     }

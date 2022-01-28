@@ -10,33 +10,51 @@ class FoodTruck : Truck {
     val milk = Food.MILK
     val potatoes = Food.POTATOES
 
-    override fun load(element: MutableList<Product>?) {
-        val baggage = mutableListOf<Product>()
-        while (currentWeight < maxLoadCapacity) {
+    override val baggage = mutableListOf<Product>()
 
-            if (element == warehouse.bread && currentWeight < maxLoadCapacity) {
-                baggage.add(bread)
-                currentWeight += bread.weight
-            }
-
-            if (element == warehouse.milk && currentWeight < maxLoadCapacity) {
-                baggage.add(milk)
-                currentWeight += milk.weight
-            }
-
-            if (element == warehouse.potatoes && currentWeight < maxLoadCapacity) {
-                baggage.add(potatoes)
-                currentWeight += potatoes.weight
-            }
-        }
-        println(baggage)
+    fun addMass(elem: Product) {
+        println(elem)
+        baggage.add(elem)
+        currentWeight += elem.weight
     }
 
-    override val baggage = mutableListOf<Product>()
+    override fun load(element: Product) {
+        var counter = 0
+        val baggage = mutableListOf<Product>()
+        while (currentWeight < maxLoadCapacity) {
+            if (element == bread) {
+                for (item in Warehouse().bread) {
+                    addMass(element)
+                    Warehouse().bread.remove(item)
+                    print("BREAD")
+                    counter ++
+                }
+            }
+            counter = 0
+            if (element == potatoes && currentWeight < maxLoadCapacity) {
+                for (item in Warehouse().potatoes) {
+                    addMass(element)
+                    Warehouse().potatoes.remove(item)
+                    println("POTATOES")
+                    counter ++
+                }
+            }
+            counter = 0
+            if (element == milk && currentWeight < maxLoadCapacity) {
+                for (item in Warehouse().milk) {
+                    addMass(element)
+                    Warehouse().milk.remove(element)
+                    println("MILK")
+                    counter ++
+                }
+            }
+        }
+    }
 
     override fun unload() {
         println("Товары, которые поступают на склад: ")
-        var timeOfDischarge = bread.time + milk.time + potatoes.time
+        var timeOfDischarge =
+            bread.time + milk.time + potatoes.time
 
         var i = 0
         while (timeOfDischarge > 0) {
@@ -51,26 +69,24 @@ class FoodTruck : Truck {
                     println("bread")
                 }
             }
-
-            i=0
+            i = 0
             for (element in baggage)
                 if (element == milk)
                     i++
             if (milk.weight != 0 && milk in baggage) {
-                warehouse.milk.add(milk)
+                warehouse.jewelry.add(milk)
                 for (j in 0..i) {
                     timeOfDischarge -= milk.time
                     baggage.remove(milk)
                     println("milk")
                 }
             }
-
-            i=0
+            i = 0
             for (element in baggage)
                 if (element == potatoes)
                     i++
             if (potatoes.weight != 0 && potatoes in baggage) {
-                warehouse.potatoes.add(potatoes)
+                warehouse.paper.add(potatoes)
                 for (j in 0..i) {
                     timeOfDischarge -= potatoes.time
                     baggage.remove(potatoes)

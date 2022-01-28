@@ -3,6 +3,6 @@ interface Truck {
     val maxLoadCapacity: Int
     val baggage: MutableList<Product>
     fun unload()
-    fun load(element: MutableList<Product>?)
+    fun load(element: Product)
     fun generateTruck()
 }

@@ -15,83 +15,117 @@ class LargeSizedTruck : Truck {
     val paper = SmallSizedProduct.PAPER
     val wood = LargeSizedProduct.WOOD
 
+    fun addMass(elem: Product) {
+        println(elem)
+        baggage.add(elem)
+        currentWeight += elem.weight
 
-    override fun load(element: MutableList<Product>?) {
+    }
 
+
+    override fun load(element: Product) {
+        var counter = 0
         val baggage = mutableListOf<Product>()
-
         while (currentWeight < maxLoadCapacity) {
-
-            if (element == warehouse.bread && currentWeight < maxLoadCapacity) {
-                baggage.add(furniture)
-                currentWeight += furniture.weight
+            if (element == furniture) {
+                for (item in Warehouse().furniture) {
+                    addMass(element)
+                    Warehouse().furniture.remove(item)
+                    print("FURNITURE")
+                    counter ++
+                }
             }
-
-            if (element == warehouse.wood && currentWeight < maxLoadCapacity) {
-                val wood = LargeSizedProduct.WOOD
-                baggage.add(wood)
-                currentWeight += wood.weight
+            counter = 0
+            if (element == wood && currentWeight < maxLoadCapacity) {
+                for (item in Warehouse().wood) {
+                    addMass(element)
+                    Warehouse().wood.remove(item)
+                    println("WOOD")
+                    counter ++
+                }
             }
-
-            if (element == warehouse.gyroskuter && currentWeight < maxLoadCapacity) {
-                baggage.add(gyroskuter)
-                currentWeight += gyroskuter.weight
+            counter = 0
+            if (element == gyroskuter && currentWeight < maxLoadCapacity) {
+                for (item in Warehouse().gyroskuter) {
+                    addMass(element)
+                    Warehouse().gyroskuter.remove(element)
+                    println("GYROSKUTER")
+                    counter ++
+                }
             }
-
-            if (element == warehouse.byke && currentWeight < maxLoadCapacity) {
-                baggage.add(byke)
-                currentWeight += byke.weight
+            counter = 0
+            if (element == byke && currentWeight < maxLoadCapacity) {
+                for (item in Warehouse().byke) {
+                    addMass(element)
+                    Warehouse().byke.remove(element)
+                    println("BYKE")
+                    counter ++
+                }
             }
-
-            if (element == warehouse.jewelry && currentWeight < maxLoadCapacity) {
-                baggage.add(jewelry)
-                currentWeight += jewelry.weight
+            counter = 0
+            if (element == jewelry && currentWeight < maxLoadCapacity) {
+                for (item in Warehouse().jewelry) {
+                    addMass(element)
+                    Warehouse().jewelry.remove(element)
+                    println("JEWELRY")
+                    counter ++
+                }
             }
-
-            if (element == warehouse.candles && currentWeight < maxLoadCapacity) {
-                baggage.add(candles)
-                currentWeight += candles.weight
+            counter = 0
+            if (element == candles && currentWeight < maxLoadCapacity) {
+                for (item in Warehouse().candles) {
+                    addMass(element)
+                    Warehouse().candles.remove(element)
+                    println("CANDLES")
+                    counter ++
+                }
             }
-
-            if (element == warehouse.paper && currentWeight < maxLoadCapacity) {
-                baggage.add(paper)
-                currentWeight += paper.weight
-            }
-
-            if (element == warehouse.wood && currentWeight < maxLoadCapacity) {
-                baggage.add(wood)
-                currentWeight += wood.weight
+            counter = 0
+            if (element == paper && currentWeight < maxLoadCapacity) {
+                for (item in Warehouse().paper) {
+                    addMass(element)
+                    Warehouse().paper.remove(element)
+                    println("PAPER")
+                    counter ++
+                }
             }
         }
-        println(baggage)
     }
 
     override fun generateTruck() {
+        while (maxLoadCapacity > currentWeight) {
+            for (i in 0..Random.nextInt(0, 10)) {
+                baggage.add(furniture)
+                currentWeight += furniture.weight
+            }
+            for (i in 0..Random.nextInt(0, 10)) {
+                baggage.add(gyroskuter)
+                currentWeight += furniture.weight
+            }
+            for (i in 0..Random.nextInt(0, 10)) {
+                baggage.add(byke)
+                currentWeight += furniture.weight
+            }
 
-        for (i in 0..Random.nextInt(0, 10)) {
-            baggage.add(furniture)
-        }
-        for (i in 0..Random.nextInt(0, 10)) {
-            baggage.add(gyroskuter)
-        }
-        for (i in 0..Random.nextInt(0, 10)) {
-            baggage.add(byke)
-        }
+            for (i in 0..Random.nextInt(0, 10)) {
+                baggage.add(jewelry)
+                currentWeight += furniture.weight
+            }
 
-        for (i in 0..Random.nextInt(0, 10)) {
-            baggage.add(jewelry)
-        }
+            for (i in 0..Random.nextInt(0, 10)) {
+                baggage.add(candles)
+                currentWeight += furniture.weight
+            }
 
-        for (i in 0..Random.nextInt(0, 10)) {
-            baggage.add(candles)
-        }
+            for (i in 0..Random.nextInt(0, 10)) {
+                baggage.add(paper)
+                currentWeight += furniture.weight
+            }
 
-        for (i in 0..Random.nextInt(0, 10)) {
-            baggage.add(paper)
-        }
-
-        for (i in 0..Random.nextInt(0, 10)) {
-            baggage.add(wood)
+            for (i in 0..Random.nextInt(0, 10)) {
+                baggage.add(wood)
+                currentWeight += furniture.weight
+            }
         }
     }
 
@@ -100,6 +134,7 @@ class LargeSizedTruck : Truck {
         println("Товары, которые поступают на склад: ")
         var timeOfDischarge =
             candles.time + jewelry.time + paper.time + furniture.time + gyroskuter.time + byke.time + wood.time
+
         var i = 0
         while (timeOfDischarge > 0) {
             for (element in baggage)
@@ -182,6 +217,7 @@ class LargeSizedTruck : Truck {
                 for (j in 0..i) {
                     timeOfDischarge -= wood.time
                     baggage.remove(wood)
+                    println("wood")
                 }
             }
         }

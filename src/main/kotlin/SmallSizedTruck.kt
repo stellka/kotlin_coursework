@@ -13,64 +13,85 @@ class SmallSizedTruck : Truck {
     val paper = SmallSizedProduct.PAPER
     val wood = LargeSizedProduct.WOOD
 
-    //загрузить грузовик товаром
-    override fun load(element: MutableList<Product>?) {
-        val baggage = mutableListOf<Product>()
-        while (currentWeight < maxLoadCapacity) {
-
-            if (element == warehouse.bread && currentWeight < maxLoadCapacity) {
-                baggage.add(furniture)
-                currentWeight += furniture.weight
-            }
-
-            if (element == warehouse.wood && currentWeight < maxLoadCapacity) {
-                val wood = LargeSizedProduct.WOOD
-                baggage.add(wood)
-                currentWeight += wood.weight
-            }
-
-            if (element == warehouse.gyroskuter && currentWeight < maxLoadCapacity) {
-                baggage.add(gyroskuter)
-                currentWeight += gyroskuter.weight
-            }
-
-            if (element == warehouse.byke && currentWeight < maxLoadCapacity) {
-                baggage.add(byke)
-                currentWeight += byke.weight
-            }
-
-            if (element == warehouse.jewelry && currentWeight < maxLoadCapacity) {
-                baggage.add(jewelry)
-                currentWeight += jewelry.weight
-            }
-
-            if (element == warehouse.candles && currentWeight < maxLoadCapacity) {
-                baggage.add(candles)
-                currentWeight += candles.weight
-            }
-
-            if (element == warehouse.paper && currentWeight < maxLoadCapacity) {
-                baggage.add(paper)
-                currentWeight += paper.weight
-            }
-
-            if (element == warehouse.wood && currentWeight < maxLoadCapacity) {
-                baggage.add(wood)
-                currentWeight += wood.weight
-            }
-        }
-        println(baggage)
-    }
-
     override val baggage = mutableListOf<Product>()
 
     override var warehouse = Warehouse()
+
+    fun addMass(elem: Product) {
+        println(elem)
+        baggage.add(elem)
+        currentWeight += elem.weight
+
+    }
+
+    override fun load(element: Product) {
+        var counter = 0
+        val baggage = mutableListOf<Product>()
+        while (currentWeight < maxLoadCapacity) {
+            if (element == furniture) {
+                for (item in warehouse.furniture) {
+                    addMass(element)
+                    warehouse.furniture.remove(item)
+                    println("FURNITURE")
+                }
+            }
+
+            if (element == wood && currentWeight < maxLoadCapacity) {
+                for (item in warehouse.wood) {
+                    addMass(element)
+                    warehouse.wood.remove(item)
+                    println("WOOD")
+                }
+            }
+
+            if (element == warehouse.gyroskuter && currentWeight < maxLoadCapacity) {
+                for (item in warehouse.gyroskuter) {
+                    addMass(element)
+                    warehouse.gyroskuter.remove(element)
+                    println("GYROSKUTER")
+                }
+            }
+
+            if (element == warehouse.byke && currentWeight < maxLoadCapacity) {
+                for (item in warehouse.byke) {
+                    addMass(element)
+                    warehouse.byke.remove(element)
+                    println("BYKE")
+                }
+            }
+
+            if (element == jewelry && currentWeight < maxLoadCapacity) {
+                for (item in warehouse.jewelry) {
+                    addMass(element)
+                    warehouse.jewelry.remove(element)
+                    println("JEWELRY")
+                }
+            }
+
+            if (element == candles && currentWeight < maxLoadCapacity) {
+                for (item in warehouse.candles) {
+                    addMass(element)
+                    warehouse.candles.remove(element)
+                    println("CANDLES")
+                }
+            }
+
+            if (element == paper && currentWeight < maxLoadCapacity) {
+                for (item in warehouse.paper) {
+                    addMass(element)
+                    warehouse.paper.remove(element)
+                    println("PAPER")
+                }
+            }
+        }
+    }
 
     //разгрузить грузовик
     override fun unload() {
         println("Товары, которые поступают на склад: ")
         var timeOfDischarge =
             candles.time + jewelry.time + paper.time + furniture.time + gyroskuter.time + byke.time + wood.time
+
         var i = 0
         while (timeOfDischarge > 0) {
             for (element in baggage)
@@ -129,6 +150,7 @@ class SmallSizedTruck : Truck {
                 for (j in 0..i) {
                     timeOfDischarge -= gyroskuter.time
                     baggage.remove(gyroskuter)
+                    println("gyroskuter")
                 }
             }
             i = 0
