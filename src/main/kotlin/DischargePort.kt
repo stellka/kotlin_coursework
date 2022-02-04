@@ -1,4 +1,5 @@
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.produce
@@ -9,41 +10,31 @@ import kotlin.random.Random
 
 class DischargePort {
 
-    fun getTruck() = runBlocking {
-        repeat(3) {
-            val result = when (Random.nextInt(1, 4)) {
-                1 -> SmallSizedTruck()
-                2 -> FoodTruck()
-                3 -> MediumTruck()
-                4 -> LargeSizedTruck()
-                else -> null
-            }
+    private val scope = CoroutineScope(newSingleThreadContext("storage"))
+
+    suspend fun unloadTruck() : Unit = withContext(scope.coroutineContext) {
+        repeat(5) {
+            val result = TruckGenerator().randomTruck
             if (result != null) {
                 println("Максимальная грузоподъемность пришедшего на разгрузку грузовика: ")
                 println(result.maxLoadCapacity)
                 println("Происходит выгрузка товаров на склад...")
                 result.generateTruck()
-                result.unload()
-                delay(100000)
-            }
-        }
-        coroutineContext.cancelChildren()
-    }
+                println(result.baggage)
+                while (result.timeOfDischarge < result.maxLoadCapacity) {
+                    Warehouse().products = produce(context = Dispatchers.Default) {
+                        for (element in result.baggage) {
+                            println(element)
+                            send(element)
+                            result.baggage.remove(element)
+                            result.timeOfDischarge -= element.time
+                        }
+                    } as Channel<Product>
+                    delay(100000)
 
-    private fun CoroutineScope.produceTruck() = produce<Truck> {
-        while (true) {
-            val result = when (Random.nextInt(1, 4)) {
-                1 -> SmallSizedTruck()
-                2 -> FoodTruck()
-                3 -> MediumTruck()
-                4 -> LargeSizedTruck()
-                else -> null
+                }
             }
-            result?.let { send(it) }
+            coroutineContext.cancelChildren()
         }
-    }
-
-    fun CoroutineScope.unloadTruck(result: ReceiveChannel<Truck>): ReceiveChannel<Truck> = produce {
-        for (x in produceTruck()) send(result.receive())
     }
 }
