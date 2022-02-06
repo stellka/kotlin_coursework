@@ -5,67 +5,76 @@ class LargeSizedTruck : Truck {
     override var timeOfDischarge: Int = 0
 
     var currentWeight = 0
-    override var warehouse: Warehouse = Warehouse()
     override var baggage = mutableListOf<Product>()
 
-    val furniture = LargeSizedProduct.FURNITURE
-    val gyroskuter = MediumSizedProduct.GYROSKUTER
-    val byke = MediumSizedProduct.BYKE
-    val jewelry = SmallSizedProduct.JEWELRY
-    val candles = SmallSizedProduct.CANDLES
-    val paper = SmallSizedProduct.PAPER
-    val wood = LargeSizedProduct.WOOD
-
-    override fun addMass(elem: Product): MutableList<Product> {
-        while (currentWeight < maxLoadCapacity) {
-            baggage.add(elem)
-            currentWeight += elem.weight
+    //генерация товра рандомного типа, который в последствии будет загружен в грузовик
+    override val item: Any? = when (Random.nextInt(1, 10)) {
+        1 -> Food.BREAD
+        2 -> MediumSizedProduct.BYKE
+        3 -> SmallSizedProduct.JEWELRY
+        4 -> Food.MILK
+        5 -> Food.POTATOES
+        6 -> SmallSizedProduct.CANDLES
+        7 -> SmallSizedProduct.PAPER
+        8 -> MediumSizedProduct.GYROSKUTER
+        9 -> LargeSizedProduct.FURNITURE
+        10 -> LargeSizedProduct.WOOD
+        else -> {
+            null
         }
-        return baggage
     }
 
+    //загрузка в грузовик товаров определенного типа
+    override fun addMass(): Product {
+        if (currentWeight < maxLoadCapacity) {
+            baggage.add(item as Product)
+            currentWeight += item.weight
+        }
+        return item as Product
+    }
 
+    //генерация товаров для грузовика, который подъезжает к разгрузке
     override fun generateTruck() {
         while (maxLoadCapacity > currentWeight) {
             for (i in 0..Random.nextInt(0, 10)) {
-                baggage.add(furniture)
-                currentWeight += furniture.weight
-                timeOfDischarge += furniture.time
+                baggage.add(LargeSizedProduct.FURNITURE)
+                currentWeight += LargeSizedProduct.FURNITURE.weight
+                timeOfDischarge += LargeSizedProduct.FURNITURE.time
 
             }
             for (i in 0..Random.nextInt(0, 10)) {
-                baggage.add(gyroskuter)
-                currentWeight += gyroskuter.weight
-                timeOfDischarge += gyroskuter.time
+                baggage.add(MediumSizedProduct.GYROSKUTER)
+                currentWeight += MediumSizedProduct.GYROSKUTER.weight
+                timeOfDischarge += MediumSizedProduct.GYROSKUTER.time
             }
             for (i in 0..Random.nextInt(0, 10)) {
-                baggage.add(byke)
-                currentWeight += byke.weight
-                timeOfDischarge += byke.time
-            }
-
-            for (i in 0..Random.nextInt(0, 10)) {
-                baggage.add(jewelry)
-                currentWeight += jewelry.weight
-                timeOfDischarge += jewelry.time
+                baggage.add(MediumSizedProduct.BYKE)
+                currentWeight += MediumSizedProduct.BYKE.weight
+                timeOfDischarge += MediumSizedProduct.BYKE.time
             }
 
             for (i in 0..Random.nextInt(0, 10)) {
-                baggage.add(candles)
-                currentWeight += candles.weight
-                timeOfDischarge += candles.time
+                baggage.add(SmallSizedProduct.JEWELRY)
+                currentWeight += SmallSizedProduct.JEWELRY.weight
+                timeOfDischarge += SmallSizedProduct.JEWELRY.time
             }
 
             for (i in 0..Random.nextInt(0, 10)) {
-                baggage.add(paper)
-                currentWeight += paper.weight
-                timeOfDischarge += paper.time
+                baggage.add(SmallSizedProduct.CANDLES)
+                currentWeight += SmallSizedProduct.CANDLES.weight
+                timeOfDischarge += SmallSizedProduct.CANDLES.time
             }
 
             for (i in 0..Random.nextInt(0, 10)) {
-                baggage.add(wood)
-                currentWeight += wood.weight
-                timeOfDischarge += wood.time
+                baggage.add(SmallSizedProduct.PAPER)
+                currentWeight += SmallSizedProduct.PAPER.weight
+                timeOfDischarge += SmallSizedProduct.PAPER.time
+            }
+
+            for (i in 0..Random.nextInt(0, 10)) {
+                baggage.add(LargeSizedProduct.WOOD)
+                currentWeight += LargeSizedProduct.WOOD.weight
+                timeOfDischarge += LargeSizedProduct.WOOD.time
             }
         }
     }
