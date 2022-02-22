@@ -38,16 +38,19 @@ class FoodTruck : Truck {
 
         for (i in 0..Random.nextInt(0, 10)) {
             baggage.add(bread)
+            println(bread)
             currentWeight += bread.weight
             timeOfDischarge += bread.time
         }
         for (i in 0..Random.nextInt(0, 10)) {
             baggage.add(milk)
+            println(milk)
             currentWeight += milk.weight
             timeOfDischarge += milk.time
         }
         for (i in 0..Random.nextInt(0, 10)) {
             baggage.add(potatoes)
+            println(potatoes)
             currentWeight += potatoes.weight
             timeOfDischarge += potatoes.time
         }
