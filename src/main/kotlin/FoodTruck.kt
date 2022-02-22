@@ -3,10 +3,7 @@ import kotlin.random.Random
 class FoodTruck : Truck {
     override val maxLoadCapacity: Int = 30
 
-    var currentWeight = 0
-
-    override var timeOfDischarge = 0
-
+    private var currentWeight = 0
     override val item: Any? = when (Random.nextInt(1, 10)) {
         1 -> Food.BREAD
         2 -> MediumSizedProduct.BYKE
@@ -22,6 +19,10 @@ class FoodTruck : Truck {
             null
         }
     }
+    override var timeOfDischarge = 0
+    val bread = Food.BREAD
+    val milk = Food.MILK
+    val potatoes = Food.POTATOES
 
     override val baggage = mutableListOf<Product>()
 
@@ -36,22 +37,19 @@ class FoodTruck : Truck {
     override fun generateTruck() : MutableList<Product>{
 
         for (i in 0..Random.nextInt(0, 10)) {
-            baggage.add(Food.BREAD)
-            println("BREAD")
-            currentWeight += Food.BREAD.weight
-            timeOfDischarge += Food.BREAD.time
+            baggage.add(bread)
+            currentWeight += bread.weight
+            timeOfDischarge += bread.time
         }
         for (i in 0..Random.nextInt(0, 10)) {
-            baggage.add(Food.MILK)
-            println("MILK")
-            currentWeight += Food.MILK.weight
-            timeOfDischarge += Food.MILK.time
+            baggage.add(milk)
+            currentWeight += milk.weight
+            timeOfDischarge += milk.time
         }
         for (i in 0..Random.nextInt(0, 10)) {
-            baggage.add(Food.POTATOES)
-            println("POTATOES")
-            currentWeight +=Food.POTATOES.weight
-            timeOfDischarge += Food.POTATOES.time
+            baggage.add(potatoes)
+            currentWeight += potatoes.weight
+            timeOfDischarge += potatoes.time
         }
         return baggage
     }
