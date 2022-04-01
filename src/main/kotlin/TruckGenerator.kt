@@ -1,45 +1,42 @@
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.channels.SendChannel
-import kotlinx.coroutines.channels.produce
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlin.random.Random
 
 class TruckGenerator {
 
-    @OptIn(DelicateCoroutinesApi::class)
-
-    private val mutex = Mutex()
-    suspend fun sendTruck(channel: SendChannel<Truck>) {
-        mutex.withLock {
-            repeat(3) {
-                val randomTruckForDischarge = when (Random.nextInt(1, 4)) {
-                    1 -> SmallSizedTruck()
-                    2 -> FoodTruck()
-                    3 -> MediumTruck()
-                    4 -> LargeSizedTruck()
-                    else -> null
-                }//выбор рандомного грузовика для разгрузки товара
-                println("Был сгенерирован грузовик с грузоподъемностью ${randomTruckForDischarge?.maxLoadCapacity}")
-                channel.send(randomTruckForDischarge!!)
-                println("Были сгенерированы товары для грузовика: ")
-                randomTruckForDischarge.generateTruck()
-                delay(10000)
-            }
-        }
-    }
-    suspend fun launchProcessor(channel: ReceiveChannel<Truck>) {
-        for (truck in channel) {
-           channel.receive()
-        }
-    }
-
-    val randomTruckForLoading = when (Random.nextInt(1, 2)) {
+    val randomTruck = when (Random.nextInt(1, 4)) {
         1 -> SmallSizedTruck()
         2 -> FoodTruck()
-        else -> null
-    } //выбор рандомного грузовика для загрузки товара
+        3 -> MediumTruck()
+        else -> LargeSizedTruck()
+    }
 
+    fun generateTruck(randomTruck: Truck) : MutableList<Product>{
+
+        while (randomTruck.maxLoadCapacity > randomTruck.currentWeight) {
+            val item: Any = when (Random.nextInt(1, 9)) {
+                1 -> Food.BREAD
+                2 -> MediumSizedProduct.BYKE
+                3 -> SmallSizedProduct.JEWELRY
+                4 -> Food.MILK
+                5 -> Food.POTATOES
+                6 -> SmallSizedProduct.CANDLES
+                7 -> SmallSizedProduct.PAPER
+                8 -> MediumSizedProduct.GYROSKUTER
+                9 -> LargeSizedProduct.FURNITURE
+                else -> LargeSizedProduct.WOOD
+            }
+
+            if (randomTruck == FoodTruck() && item == Food.MILK || item == Food.POTATOES || item == Food.BREAD) {
+                randomTruck.baggage.add(item as Product)
+                println(item)
+                randomTruck.currentWeight += item.weight
+                randomTruck.timeOfDischarge += item.time
+            } else {
+                randomTruck.baggage.add(item as Product)
+                println(item)
+                randomTruck.currentWeight += item.weight
+                randomTruck.timeOfDischarge += item.time
+            }
+        }
+        return randomTruck.baggage
+    }
 }

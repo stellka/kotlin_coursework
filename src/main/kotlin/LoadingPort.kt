@@ -1,27 +1,37 @@
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
 class LoadingPort {
 
-    private val scope = CoroutineScope(newSingleThreadContext("storage"))
-
-    suspend fun getElement(): Unit = withContext(scope.coroutineContext) {
-        //код по получению элементов
-        println("Происходит загрузка товаров в грузовик...")
-        repeat(5) {
-            val randomTruck = TruckGenerator().randomTruckForLoading
-            if (randomTruck?.item == DistributionCenter().warehouse.products.receive()) {
-                println("В грузовик был загружен товар")
-                println(Warehouse().products.receive())
-                randomTruck.addMass()
+    private val mutex = Mutex()
+    suspend fun getTruck(channel: SendChannel<Truck>) {
+        mutex.withLock {
+            repeat(5) {
+                val truck = TruckGenerator().randomTruck
+                println("Был получен грузовик с грузоподъемностью ${truck.maxLoadCapacity}")
+                channel.send(truck)
+                delay(10000)
             }
         }
-        coroutineContext.cancelChildren()
+    }
+
+    suspend fun loadTruck(channel: ReceiveChannel<Truck>) {
+        mutex.withLock {
+            for (truck in channel) {
+                println("Происходит загрузка грузовиков...")
+                while (truck.currentWeight < truck.maxLoadCapacity) {
+                    for (element in DistributionCenter().warehouse.products) {
+                        println("Со склада получен товар: $element")
+                        DistributionCenter().warehouse.products.receive()
+                        truck.currentWeight += element.weight
+                    }
+                }
+            }
+        }
     }
 }
 
