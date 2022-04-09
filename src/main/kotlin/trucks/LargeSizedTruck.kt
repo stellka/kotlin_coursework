@@ -1,7 +1,9 @@
-import kotlin.random.Random
+package trucks
 
-class MediumTruck : Truck {
-    override val maxLoadCapacity: Int = 100
+import products.Product
+
+class LargeSizedTruck : Truck {
+    override val maxLoadCapacity: Int = 200
     override var baggage = mutableListOf<Product>()
     override var timeOfDischarge = 0
     override var currentWeight = 0

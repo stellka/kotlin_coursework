@@ -1,10 +1,13 @@
+package ports
+
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import trucks.Truck
 
-class DistributionCenter {
-    val warehouse = Warehouse()
+class DistributionCenter(private val loadingPort: LoadingPort, private val dischargePort: DischargePort) {
+
     private val channelForTruck = Channel<Truck>()
 
     @JvmName("launchProcessor1")
@@ -15,13 +18,14 @@ class DistributionCenter {
     }
 
     fun dischageTruck() = runBlocking {
-        launch { DischargePort().sendTruck(channelForTruck) }
-        launch { DischargePort().unloadTruck(channelForTruck) }
+
+        launch { dischargePort.sendTruck(channelForTruck) }
+        launch { dischargePort.unloadTruck(channelForTruck) }
         launch { launchProcessor(channelForTruck) }
     }
 
 
-//    suspend fun launchProcessor(channel: ReceiveChannel<Product>) {
+//    suspend fun launchProcessor(channel: ReceiveChannel<products.Product>) {
 //        for (product in channel) {
 //            channel.receive()
 //        }
@@ -29,8 +33,8 @@ class DistributionCenter {
 //}
 
     fun loadTruck() = runBlocking {
-        launch { LoadingPort().getTruck(channelForTruck) }
-        launch { LoadingPort().loadTruck(channelForTruck) }
+        launch { loadingPort.getTruck(channelForTruck) }
+        launch { loadingPort.loadTruck(channelForTruck) }
         launch { launchProcessor(channelForTruck) }
     }
 }

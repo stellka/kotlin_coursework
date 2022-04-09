@@ -1,3 +1,5 @@
+package products
+
 import kotlin.random.Random
 
 enum class LargeSizedProduct(override val weight: Int, override val time: Int) : Product {

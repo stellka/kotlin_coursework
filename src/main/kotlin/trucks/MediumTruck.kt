@@ -1,5 +1,9 @@
-class LargeSizedTruck : Truck {
-    override val maxLoadCapacity: Int = 200
+package trucks
+
+import products.Product
+
+class MediumTruck : Truck {
+    override val maxLoadCapacity: Int = 100
     override var baggage = mutableListOf<Product>()
     override var timeOfDischarge = 0
     override var currentWeight = 0

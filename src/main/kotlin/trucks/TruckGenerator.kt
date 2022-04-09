@@ -1,3 +1,10 @@
+package trucks
+
+import food.Food
+import products.LargeSizedProduct
+import products.MediumSizedProduct
+import products.Product
+import products.SmallSizedProduct
 import kotlin.random.Random
 
 class TruckGenerator {
@@ -25,7 +32,7 @@ class TruckGenerator {
                 else -> LargeSizedProduct.WOOD
             }
 
-            if (randomTruck == FoodTruck() && item == Food.MILK || item == Food.POTATOES || item == Food.BREAD) {
+            if (randomTruck is FoodTruck && item == Food.MILK || item == Food.POTATOES || item == Food.BREAD) {
                 randomTruck.baggage.add(item as Product)
                 println(item)
                 randomTruck.currentWeight += item.weight
